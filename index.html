@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLACKR Pregnancy Calculator</title>
+<style>
+:root {
+  --bg: #111318;
+  --panel: #1b1e25;
+  --panel2: #242833;
+  --text: #f2f4f8;
+  --muted: #a3acba;
+  --accent: #8b7cff;
+  --danger: #ef4444;
+  --success: #22c55e;
+  --border: #383e4b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle at top, #252a3a 0, var(--bg) 45%);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+  font-size: 15px;
+}
+
+.container { width: 100%; max-width: 1600px; }
+
+.card {
+  background: rgba(27, 30, 37, 0.97);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+}
+
+h1 { text-align: center; margin: 0 0 4px; font-size: 26px; }
+
+.subtitle {
+  text-align: center;
+  color: var(--muted);
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+
+/* 4-Column Widescreen Grid */
+.columns-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) 1.25fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .columns-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .columns-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.column {
+  background: rgba(17, 20, 26, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.column.action-column {
+  background: rgba(27, 30, 37, 0.85);
+  border-color: rgba(139, 124, 255, 0.4);
+  position: sticky;
+  top: 16px;
+}
+
+.column-header {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 4px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field {
+  padding: 10px 12px;
+  background: var(--panel2);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+label { font-weight: 700; font-size: 14px; }
+
+.val-badge {
+  background: var(--accent);
+  color: white;
+  padding: 3px 9px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.hint {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 5px;
+  line-height: 1.3;
+}
+
+input[type="number"], input[type="range"], select {
+  width: 100%;
+  padding: 9px 11px;
+  border-radius: 8px;
+  border: 1px solid #485060;
+  background: #11141a;
+  color: var(--text);
+  font-size: 14px;
+}
+
+input[type="range"] {
+  accent-color: var(--accent);
+  cursor: pointer;
+  padding: 0;
+  height: 6px;
+}
+
+.radio-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.radio-group label {
+  flex: 1;
+  background: #11141a;
+  padding: 7px;
+  border-radius: 6px;
+  border: 1px solid #485060;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.radio-group input[type="radio"] { display: none; }
+
+.radio-group input[type="radio"]:checked + span {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.radio-group label:has(input[type="radio"]:checked) {
+  border-color: var(--accent);
+  background: rgba(139, 124, 255, 0.15);
+}
+
+.checklist-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 4px;
+  max-height: 160px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  background: #11141a;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #343a46;
+  cursor: pointer;
+}
+
+.checklist-item input { accent-color: var(--accent); }
+
+.side-by-side {
+  display: flex;
+  gap: 10px;
+}
+
+.side-by-side > div { flex: 1; }
+
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 14px;
+  border: 0;
+  border-radius: 10px;
+  background: var(--accent);
+  color: white;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(139, 124, 255, 0.35);
+  transition: transform 0.1s, opacity 0.1s;
+}
+
+button:active { transform: scale(0.98); }
+
+button.secondary {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+button:disabled { opacity: 0.55; cursor: wait; }
+
+.result {
+  padding: 16px;
+  text-align: center;
+  border-radius: 12px;
+  border: 2px solid var(--border);
+}
+
+.result.pregnant {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.12);
+}
+
+.result.not-pregnant {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.12);
+}
+
+.result.rolling {
+  border-color: var(--accent);
+  background: rgba(139, 124, 255, 0.08);
+}
+
+.result-word { font-size: 26px; font-weight: 900; }
+
+.score {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.roll {
+  margin-top: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  min-height: 24px;
+}
+
+.bar {
+  margin-top: 12px;
+  height: 8px;
+  border-radius: 999px;
+  background: #0d0f13;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.2s;
+}
+
+.breakdown-table {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  font-size: 12px;
+  text-align: left;
+}
+
+.breakdown-table td {
+  padding: 5px 3px;
+  border-bottom: 1px solid var(--border);
+}
+
+.breakdown-table td.val {
+  text-align: right;
+  font-weight: bold;
+}
+
+.batch-box {
+  margin-top: 10px;
+  padding: 10px;
+  background: #11141a;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 13px;
+}
+
+details { margin-top: 10px; color: var(--muted); font-size: 13px; }
+summary { cursor: pointer; color: var(--text); font-weight: bold; }
+
+.footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 18px;
+  line-height: 1.4;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="card">
+    <h1>BLACKR Pregnancy Calculator</h1>
+    <p class="subtitle">Enter session variables across all three columns to calculate pregnancy risk.</p>
+
+    <div class="columns-grid">
+      
+      <!-- COLUMN 1: FEMALE CHARACTERISTICS -->
+      <div class="column">
+        <div class="column-header">♀️ Female Characteristics</div>
+
+        <!-- Female Age Slider -->
+        <div class="field">
+          <div class="label-row">
+            <label for="femaleAge">Female Age</label>
+            <span id="femaleAgeBadge" class="val-badge">18</span>
+          </div>
+          <input id="femaleAge" type="range" min="18" max="45" step="1" value="18">
+          <span class="hint"></span>
+        </div>
+
+        <!-- Female Race -->
+        <div class="field">
+          <label for="femaleRace">Female Race</label>
+          <select id="femaleRace">
+            <option value="Not Listed" selected>Not Listed</option>
+            <option value="Human">Human</option>
+            <option value="Elf">Elf</option>
+            <option value="Angel">Angel</option>
+            <option value="Demon">Demon</option>
+            <option value="Vampire">Vampire</option>
+            <option value="Alien">Alien</option>
+          </select>
+          <span class="hint"></span>
+        </div>
+
+        <!-- Dynamic Human Sub-Race -->
+        <div class="field" id="humanSubRaceField" style="display:none;">
+          <label for="humanSubRace">Human Sub-Race</label>
+          <select id="humanSubRace">
+            <option value="White">White</option>
+            <option value="Asian">Asian</option>
+            <option value="Black">Black</option>
+            <option value="Other">Other</option>
+          </select>
+          <span class="hint"></span>
+        </div>
+
+        <!-- Orgasm Counter Slider (Diminishing returns after 3) -->
+        <div class="field">
+          <div class="label-row">
+            <label for="orgasms">Orgasm Counter</label>
+            <span id="orgasmsBadge" class="val-badge">0</span>
+          </div>
+          <input id="orgasms" type="range" min="0" max="10" step="1" value="0">
+          <span class="hint"></span>
+        </div>
+
+        <!-- Arousal Level Slider -->
+        <div class="field">
+          <div class="label-row">
+            <label for="arousal">Arousal Level</label>
+            <span id="arousalBadge" class="val-badge">Lvl 0: Unaroused</span>
+          </div>
+          <input id="arousal" type="range" min="0" max="10" step="1" value="0">
+          <span class="hint"></span>
+        </div>
+
+        <!-- Affection Slider -->
+        <div class="field">
+          <div class="label-row">
+            <label for="affection">Affection</label>
+            <span id="affectionBadge" class="val-badge">Lvl 0: Hostile</span>
+          </div>
+          <input id="affection" type="range" min="0" max="10" step="1" value="0">
+          <span class="hint"></span>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: QUANTUM PHYSICS MODIFIERS -->
+      <div class="column">
+        <div class="column-header">🌀 Quantum Modifiers</div>
+
+        <!-- Ovulating Radio Group -->
+        <div class="field">
+          <label>Ovulating</label>
+          <div class="radio-group">
+            <label>
+              <input type="radio" name="ovulating" value="yes">
+              <span>Yes</span>
+            </label>
+            <label>
+              <input type="radio" name="ovulating" value="no" checked>
+              <span>No</span>
+            </label>
+          </div>
+          <span class="hint"></span>
+        </div>
+
+        <!-- Position -->
+        <div class="field">
+          <label for="position">Position of First Ejaculation</label>
+          <select id="position">
+            <option value="Missionary">Missionary & Variations</option>
+            <option value="FemaleOnTop">Female on Top & Variations</option>
+            <option value="ProneBone">Prone Bone</option>
+            <option value="DoggyStyle">Doggy Style</option>
+            <option value="Standing">Standing</option>
+            <option value="Other">Other</option>
+          </select>
+          <span class="hint"></span>
+        </div>
+
+        <!-- Fertility Modifier Checklist -->
+        <div class="field">
+          <label>Fertility Modifiers (Multiple Applicable)</label>
+          <div class="checklist-group">
+            <label class="checklist-item"><input type="checkbox" value="Birth Control"> Birth Control</label>
+            <label class="checklist-item"><input type="checkbox" value="Pull Out"> Pull Out</label>
+            <label class="checklist-item"><input type="checkbox" value="Aphrodisiac"> Aphrodisiac</label>
+            <label class="checklist-item"><input type="checkbox" value="Fertility Inducer"> Fertility Inducer</label>
+            <label class="checklist-item"><input type="checkbox" value="NTR+"> NTR+</label>
+            <label class="checklist-item"><input type="checkbox" value="Other Negative"> Other Negative Effect</label>
+            <label class="checklist-item"><input type="checkbox" value="Other Positive"> Other Positive Effect</label>
+          </div>
+          <span class="hint"></span>
+        </div>
+
+        <!-- Observer Effect -->
+        <div class="field">
+          <label for="observer">Observer Effect</label>
+          <select id="observer">
+            <option value="none">No Observation</option>
+            <option value="1">1 Observer</option>
+            <option value="1plus">1+ Observers</option>
+          </select>
+          <span class="hint"></span>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: MALE CHARACTERISTICS -->
+      <div class="column">
+        <div class="column-header">♂ Male Characteristics</div>
+
+        <!-- Length & Diameter Side-by-Side -->
+        <div class="field">
+          <div class="side-by-side">
+            <div>
+              <label for="length">Length (in)</label>
+              <input id="length" type="number" min="1" max="13" step="0.25" value="6">
+            </div>
+            <div>
+              <label for="girth">Diameter (in)</label>
+              <input id="girth" type="number" min="1" max="5" step="0.1" value="2">
+            </div>
+          </div>
+          <span class="hint">[Select based on penile dimensions during arousal; no effect after 13"]</span>
+        </div>
+
+        <!-- Penis Type / Male Race -->
+        <div class="field">
+          <label for="maleRace">Penis Type / Male Race</label>
+          <select id="maleRace">
+            <option value="Black">Black</option>
+            <option value="White">White</option>
+            <option value="Other Humanoid">Other Humanoid</option>
+            <option value="Anthro">Anthro</option>
+            <option value="Orc">Orc</option>
+            <option value="Tauren">Tauren</option>
+            <option value="Other">Other</option>
+          </select>
+          <span class="hint"></span>
+        </div>
+
+        <!-- Ejaculation Episodes Slider -->
+        <div class="field">
+          <div class="label-row">
+            <label for="episodes">Ejaculation Episodes</label>
+            <span id="episodesBadge" class="val-badge">0</span>
+          </div>
+          <input id="episodes" type="range" min="0" max="10" step="1" value="0">
+          <span class="hint"></span>
+        </div>
+
+        <!-- Sperm Concentration Dropdown -->
+        <div class="field">
+          <label for="spermConcentration">Sperm Concentration</label>
+          <select id="spermConcentration">
+            <option value="Dilute">Dilute / Thin (Watery density)</option>
+            <option value="Standard" selected>Standard (Normal consistency)</option>
+            <option value="Thick">Thick / Concentrated (Heavy, creamy)</option>
+            <option value="Hyper">Hyper-Dense / Gel-like (Maximum)</option>
+          </select>
+          <span class="hint"></span>
+        </div>
+
+        <!-- Semen Volume Slider -->
+        <div class="field">
+          <div class="label-row">
+            <label for="semenVolume">Semen Volume</label>
+            <span id="semenVolumeBadge" class="val-badge">Lvl 3: Standard Load</span>
+          </div>
+          <input id="semenVolume" type="range" min="1" max="10" step="1" value="3">
+          <span class="hint"></span>
+        </div>
+      </div>
+
+      <!-- COLUMN 4: CONTROL PANEL & RESULTS -->
+      <div class="column action-column">
+        <div class="column-header">🎲 Encounter Roll</div>
+
+        <!-- Action Buttons -->
+        <div class="btn-group">
+          <button id="calculate" type="button">SINGLE ROLL</button>
+          <button id="batchRoll" type="button" class="secondary">ROLL 100 TIMES</button>
+        </div>
+
+        <!-- Results Display Card -->
+        <div id="result" class="result not-pregnant" aria-live="polite">
+          <div id="resultWord" class="result-word">🟩 READY</div>
+          <div id="score">Click Single Roll or Roll 100 Times.</div>
+          <div id="roll" class="roll"></div>
+          <div id="batchStats" class="batch-box" style="display:none;"></div>
+          <div class="bar"><div id="barFill" class="bar-fill"></div></div>
+        </div>
+
+        <!-- Detailed Stat Breakdown (Closed by default) -->
+        <details>
+          <summary>View Detailed Breakdown</summary>
+          <table class="breakdown-table">
+            <tbody id="breakdownBody">
+              <tr><td colspan="2">Calculate a roll to view breakdown.</td></tr>
+            </tbody>
+          </table>
+        </details>
+      </div>
+
+    </div>
+
+    <div class="footer">⚠️ Fictional RP mechanic for artistic purposes. This does NOT model real-world fertility or pregnancy risk.</div>
+  </div>
+</div>
+
+<script>
+function setupUI() {
+  const femaleRace = document.getElementById("femaleRace");
+  const humanSubRaceField = document.getElementById("humanSubRaceField");
+
+  function updateRaceUI() {
+    humanSubRaceField.style.display = (femaleRace.value === "Human") ? "block" : "none";
+  }
+  femaleRace.addEventListener("change", updateRaceUI);
+  updateRaceUI();
+
+  // Dynamic Slider Badges
+  const sliders = [
+    { id: "femaleAge", badge: "femaleAgeBadge", format: v => v >= 45 ? "45+" : v },
+    { id: "orgasms", badge: "orgasmsBadge", format: v => v >= 10 ? ">10" : v },
+    { id: "arousal", badge: "arousalBadge", format: v => {
+        if (v === 0) return "Lvl 0: Unaroused";
+        if (v <= 2) return `Lvl ${v}: Mildly Warm`;
+	if (v <= 4) return `Lvl ${v}: Somewhat Aroused`;
+        if (v <= 6) return `Lvl ${v}: Passionate`;
+        if (v <= 8) return `Lvl ${v}: Highly Aroused`;
+        return `Lvl ${v}: Mind-Melting`;
+      } 
+    },
+    { id: "affection", badge: "affectionBadge", format: v => {
+        if (v === 0) return "Lvl 0: Pure Hatred";
+        if (v <= 2) return `Lvl ${v}: Cold / Disdain`;
+	if (v <= 3) return `Lvl ${v}: Tolerance`;
+	if (v <= 4) return `Lvl ${v}: Mild Arousal`;
+	if (v <= 5) return `Lvl ${v}: True Affection`;
+        if (v <= 7) return `Lvl ${v}: Deep Affection`;
+        if (v <= 9) return `Lvl ${v}: Love`;
+        return "Lvl 10: Pure Devotion";
+      } 
+    },
+    { id: "episodes", badge: "episodesBadge", format: v => v >= 10 ? ">10" : v },
+    { id: "semenVolume", badge: "semenVolumeBadge", format: v => {
+        if (v <= 2) return `Lvl ${v}: Minimal Trace`;
+        if (v <= 5) return `Lvl ${v}: Standard Load`;
+        if (v <= 8) return `Lvl ${v}: Heavy Load`;
+        return `Lvl ${v}: Massive Flood`;
+      } 
+    }
+  ];
+
+  sliders.forEach(s => {
+    const el = document.getElementById(s.id);
+    const badge = document.getElementById(s.badge);
+    const update = () => badge.textContent = s.format(parseFloat(el.value));
+    el.addEventListener("input", update);
+    update();
+  });
+}
+
+document.addEventListener("DOMContentLoaded", setupUI);
+
+function num(id, min, max) {
+  let v = parseFloat(document.getElementById(id).value);
+  if (!Number.isFinite(v)) v = min;
+  return Math.min(Math.max(v, min), max);
+}
+
+function roll(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  if (max < min) max = min;
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function sleep(ms) {
+  return new Promise(r => setTimeout(r, ms));
+}
+
+function applyDiminishing(value, cap, factor = 0.2) {
+  if (value <= cap) return value;
+  return cap + (value - cap) * factor;
+}
+
+function applySoftCap(rawChance) {
+  if (rawChance <= 10.0) return rawChance;
+  // Soft-cap tuned to 0.65 for a 20-22% ceiling on max stacks
+  return 10.0 + Math.pow(rawChance - 10.0, 0.65);
+}
+
+function values() {
+  const age = num("femaleAge", 18, 45);
+  const femaleRace = document.getElementById("femaleRace").value;
+  const humanSubRace = document.getElementById("humanSubRace").value;
+  const ovulating = document.querySelector('input[name="ovulating"]:checked').value;
+  const rawOrg = num("orgasms", 0, 10);
+  const arousal = num("arousal", 0, 10);
+  const aff = num("affection", 0, 10);
+  
+  const pos = document.getElementById("position").value;
+  const obs = document.getElementById("observer").value;
+  
+  const maleRace = document.getElementById("maleRace").value;
+  const episodes = num("episodes", 0, 10);
+  const spermConc = document.getElementById("spermConcentration").value;
+  const semenVol = num("semenVolume", 1, 10);
+  const length = num("length", 1, 13);
+  const girth = num("girth", 1, 5);
+
+  const selectedFertility = Array.from(document.querySelectorAll('.checklist-group input:checked')).map(cb => cb.value);
+
+  // Age Score
+  let ageScore = 0.20;
+  if (age <= 36) ageScore = 1.50;
+  else if (age <= 42) ageScore = 0.80;
+
+  // Female Race
+  let femaleRaceScore = 0.0;
+  if (femaleRace === "Elf" || femaleRace === "Alien") femaleRaceScore = 0.50;
+  else if (femaleRace === "Vampire") femaleRaceScore = -0.80;
+  else if (femaleRace === "Not Listed") femaleRaceScore = (roll(-5, 5) * 0.10);
+  else if (femaleRace === "Human" && humanSubRace === "Other") femaleRaceScore = (roll(-5, 5) * 0.10);
+
+  // Male Race & Synergies
+  let maleRaceScore = 0.0;
+  if (maleRace === "Black") {
+    maleRaceScore = 1.00; // Moderate modifier
+  } else if (maleRace === "White") {
+    // Slight decrease with White female, slight increase with Asian/Black female
+    if (femaleRace === "Human") {
+      if (humanSubRace === "White") maleRaceScore = -0.40;
+      else if (humanSubRace === "Asian" || humanSubRace === "Black") maleRaceScore = 0.40;
+    }
+  } else if (maleRace === "Other Humanoid") {
+    maleRaceScore = 0.20;
+  } else if (maleRace === "Anthro") {
+    maleRaceScore = 0.50; // Slight increase modifier
+  } else if (maleRace === "Orc") {
+    // HIGH modifier ONLY if Female is ELF
+    if (femaleRace === "Elf") maleRaceScore = 2.50;
+    else maleRaceScore = 0.20;
+  } else if (maleRace === "Tauren") {
+    maleRaceScore = 0.80; // Modest modifier
+  } else if (maleRace === "Other") {
+    maleRaceScore = (roll(-5, 5) * 0.10); // Random low (-0.50%) to high (+0.50%)
+  }
+
+  // Ovulation
+  const ovuScore = (ovulating === "yes") ? 4.00 : -2.00;
+
+  // Orgasms (Diminishing returns start after 3)
+  const effOrg = applyDiminishing(rawOrg, 3, 0.2);
+  const orgScore = effOrg * 0.25;
+
+  // Arousal (Diminishing returns start after 5)
+  const effArousal = applyDiminishing(arousal, 5, 0.2);
+  const arousalScore = effArousal * 0.25;
+
+  // Affection (U-Shaped curve)
+  const distFromCenter = Math.abs(aff - 5.0);
+  const affScore = distFromCenter * 0.30;
+
+  // Position
+  let posScore = 0.0;
+  if (pos === "Missionary") posScore = 1.50;
+  else if (pos === "FemaleOnTop") posScore = -0.60;
+  else if (pos === "ProneBone") posScore = 1.10;
+  else if (pos === "DoggyStyle") posScore = 0.70;
+  else if (pos === "Standing") posScore = -1.00;
+  else if (pos === "Other") posScore = (roll(-10, 10) * 0.10);
+
+  // Fertility Modifiers
+  let fertScore = 0.0;
+  let fertMult = 1.0;
+
+  selectedFertility.forEach(mod => {
+    if (mod === "Birth Control") fertMult *= 0.30;
+    if (mod === "Pull Out") fertMult *= 0.60;
+    if (mod === "Aphrodisiac") fertScore += 1.00; // Positively increases chance (+1.00%)
+    if (mod === "Fertility Inducer") fertScore += 2.00;
+    if (mod === "NTR+") fertScore += 0.50;
+    if (mod === "Other Negative") fertScore -= (roll(5, 20) * 0.10);
+    if (mod === "Other Positive") fertScore += (roll(5, 20) * 0.10);
+  });
+
+  // Observer Effect
+  let obsScore = 0.0;
+  if (obs === "1") obsScore = 0.40;
+  if (obs === "1plus") obsScore = 1.00;
+
+  // Ejaculation Episodes
+  let episodeScore = 0.0;
+  if (episodes === 0) {
+    episodeScore = -99.0;
+  } else {
+    episodeScore = 1.00 + (episodes - 1) * 0.10;
+  }
+
+  // Sperm Concentration & Volume
+  let concScore = 1.00;
+  if (spermConc === "Dilute") concScore = 0.30;
+  if (spermConc === "Thick") concScore = 1.80;
+  if (spermConc === "Hyper") concScore = 2.50;
+
+  const volScore = (semenVol / 10) * 2.50;
+
+  // Size Mechanics
+  const lengthScore = length * 0.55;
+  const effGirth = applyDiminishing(girth, 3, 0.1);
+  const girthScore = effGirth * 0.15;
+
+  const baseScore = 0.20;
+
+  const rawBase = baseScore + ageScore + maleRaceScore + femaleRaceScore +
+                  ovuScore + orgScore + arousalScore + affScore + posScore + fertScore +
+                  obsScore + episodeScore + concScore + volScore + lengthScore + girthScore;
+
+  let afterProtection = Math.max(0, rawBase * fertMult);
+  if (episodes === 0) afterProtection = 0;
+
+  let finalChance = applySoftCap(afterProtection);
+  finalChance = Math.min(Math.max(finalChance, 0.0), 95.0);
+
+  const breakdown = [
+    { label: "Engine Baseline", val: "+" + baseScore.toFixed(2) + "%" },
+    { label: "Female Age (" + age + ")", val: "+" + ageScore.toFixed(2) + "%" },
+    { label: "Female Race (" + femaleRace + (femaleRace === "Human" ? " - " + humanSubRace : "") + ")", val: (femaleRaceScore >= 0 ? "+" : "") + femaleRaceScore.toFixed(2) + "%" },
+    { label: "Penis Type / Male Race (" + maleRace + ")", val: (maleRaceScore >= 0 ? "+" : "") + maleRaceScore.toFixed(2) + "%" },
+    { label: "Ovulation Status (" + ovulating + ")", val: (ovuScore >= 0 ? "+" : "") + ovuScore.toFixed(2) + "%" },
+    { label: "Orgasm & Arousal", val: "+" + (orgScore + arousalScore).toFixed(2) + "%" },
+    { label: "Affection Level (" + aff + ")", val: "+" + affScore.toFixed(2) + "%" },
+    { label: "Position Modifier", val: (posScore >= 0 ? "+" : "") + posScore.toFixed(2) + "%" },
+    { label: "Ejaculation Episodes (" + episodes + ")", val: (episodeScore >= 0 ? "+" : "") + episodeScore.toFixed(2) + "%" },
+    { label: "Sperm Conc. & Volume", val: "+" + (concScore + volScore).toFixed(2) + "%" },
+    { label: "Length & Diameter", val: "+" + (lengthScore + girthScore).toFixed(2) + "%" },
+    { label: "Observer Effect", val: "+" + obsScore.toFixed(2) + "%" },
+    { label: "Fertility Modifiers", val: (fertScore >= 0 ? "+" : "") + fertScore.toFixed(2) + "%" },
+    { label: "Protection Mult.", val: "x" + fertMult.toFixed(2) },
+    { label: "Subtotal (Pre Soft-Cap)", val: afterProtection.toFixed(2) + "%" }
+  ];
+
+  if (afterProtection > 10.0) {
+    breakdown.push({ label: "Soft-Cap Reduction", val: "-" + (afterProtection - finalChance).toFixed(2) + "%" });
+  }
+
+  breakdown.push({ label: "Final Chance", val: finalChance.toFixed(2) + "%" });
+
+  return { chance: finalChance, breakdown };
+}
+
+function updateBreakdownUI(breakdown) {
+  const body = document.getElementById("breakdownBody");
+  body.innerHTML = "";
+  breakdown.forEach(item => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = "<td>" + item.label + "</td><td class='val'>" + item.val + "</td>";
+    body.appendChild(tr);
+  });
+}
+
+async function calculate() {
+  const b1 = document.getElementById("calculate");
+  const b2 = document.getElementById("batchRoll");
+  const r = document.getElementById("result");
+  const w = document.getElementById("resultWord");
+  const s = document.getElementById("score");
+  const rt = document.getElementById("roll");
+  const bar = document.getElementById("barFill");
+  const batchStats = document.getElementById("batchStats");
+
+  batchStats.style.display = "none";
+  const v = values();
+  updateBreakdownUI(v.breakdown);
+
+  b1.disabled = true; b2.disabled = true;
+  r.className = "result rolling";
+  w.textContent = "🎲 ROLLING...";
+  s.textContent = "Rolling d100 vs " + v.chance.toFixed(1) + "% chance...";
+  rt.textContent = "";
+
+  const target = Math.round(v.chance);
+
+  const animationDelays = [25, 30, 35, 40, 45, 50, 60, 70, 85, 100, 120, 150];
+  for (let i = 0; i < animationDelays.length; i++) {
+    let dramaticVal = (i > 6) ? roll(Math.max(1, target - 10), Math.min(100, target + 10)) : roll(1, 100);
+    rt.textContent = "🎲 " + dramaticVal;
+    await sleep(animationDelays[i]);
+  }
+
+  const dice = roll(1, 100);
+  const preg = dice <= v.chance && v.chance > 0;
+
+  w.textContent = preg ? "🟥 PREGNANT" : "🟩 NOT PREGNANT";
+  s.innerHTML = "Calculated Chance: <strong>" + v.chance.toFixed(1) + "%</strong>" +
+    "<br>Hidden Roll: <strong>" + dice + " / 100</strong>";
+  
+  rt.textContent = "🎲 Rolled " + dice;
+  r.className = "result " + (preg ? "pregnant" : "not-pregnant");
+  bar.style.width = v.chance.toFixed(1) + "%";
+  b1.disabled = false; b2.disabled = false;
+}
+
+async function batchSimulate() {
+  const b1 = document.getElementById("calculate");
+  const b2 = document.getElementById("batchRoll");
+  const r = document.getElementById("result");
+  const w = document.getElementById("resultWord");
+  const s = document.getElementById("score");
+  const rt = document.getElementById("roll");
+  const bar = document.getElementById("barFill");
+  const batchStats = document.getElementById("batchStats");
+
+  const v = values();
+  updateBreakdownUI(v.breakdown);
+
+  b1.disabled = true; b2.disabled = true;
+  r.className = "result rolling";
+  w.textContent = "📊 SIMULATING...";
+  s.textContent = "Running 100 rolls...";
+  rt.textContent = "";
+
+  let hits = 0;
+  const N = 100;
+
+  for (let i = 0; i < N; i++) {
+    const dice = roll(1, 100);
+    if (dice <= v.chance && v.chance > 0) hits++;
+    if (i % 10 === 0) {
+      rt.textContent = "Batch Progress: " + (i + 10) + " / " + N;
+      await sleep(15);
+    }
+  }
+
+  const rate = ((hits / N) * 100).toFixed(1);
+  w.textContent = "📊 COMPLETE";
+  s.innerHTML = "Target Odds: <strong>" + v.chance.toFixed(1) + "%</strong>";
+  
+  batchStats.style.display = "block";
+  batchStats.innerHTML = "<strong>Simulated Hits:</strong> " + hits + " / " + N + " (" + rate + "%)" +
+    "<br><span style='color:var(--muted)'>Target: " + v.chance.toFixed(1) + "% | Diff: " + (rate - v.chance.toFixed(1)).toFixed(1) + "%</span>";
+
+  rt.textContent = hits > 0 ? "Result: " + hits + " Successes" : "Result: 0 Successes";
+  r.className = "result " + (hits > 0 ? "pregnant" : "not-pregnant");
+  bar.style.width = rate + "%";
+  b1.disabled = false; b2.disabled = false;
+}
+
+document.getElementById("calculate").addEventListener("click", calculate);
+document.getElementById("batchRoll").addEventListener("click", batchSimulate);
+</script>
+</body>
+</html>
