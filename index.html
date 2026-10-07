@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLACKR Pregnancy Calculator</title>
+<title>BLACKR Pregnancy Calculator v2.1</title>
 <style>
 :root {
   --bg: #111318;
@@ -333,7 +333,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
 <body>
 <div class="container">
   <div class="card">
-    <h1>BLACKR Pregnancy Calculator</h1>
+    <h1>BLACKR Pregnancy Calculator v2.1</h1>
     <p class="subtitle">Enter session variables across all three columns to calculate pregnancy risk.</p>
 
     <div class="columns-grid">
@@ -487,7 +487,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
               <input id="girth" type="number" min="1" max="5" step="0.1" value="2">
             </div>
           </div>
-          <span class="hint">[Select based on penile dimensions during arousal; no effect after 13"]</span>
+          <span class="hint">[Select based on penile dimensions during arousal; max effect cap at 13"]</span>
         </div>
 
         <!-- Penis Type / Male Race -->
@@ -592,7 +592,7 @@ function setupUI() {
     { id: "arousal", badge: "arousalBadge", format: v => {
         if (v === 0) return "Lvl 0: Unaroused";
         if (v <= 2) return `Lvl ${v}: Mildly Warm`;
-	if (v <= 4) return `Lvl ${v}: Somewhat Aroused`;
+        if (v <= 4) return `Lvl ${v}: Somewhat Aroused`;
         if (v <= 6) return `Lvl ${v}: Passionate`;
         if (v <= 8) return `Lvl ${v}: Highly Aroused`;
         return `Lvl ${v}: Mind-Melting`;
@@ -601,9 +601,9 @@ function setupUI() {
     { id: "affection", badge: "affectionBadge", format: v => {
         if (v === 0) return "Lvl 0: Pure Hatred";
         if (v <= 2) return `Lvl ${v}: Cold / Disdain`;
-	if (v <= 3) return `Lvl ${v}: Tolerance`;
-	if (v <= 4) return `Lvl ${v}: Mild Arousal`;
-	if (v <= 5) return `Lvl ${v}: True Affection`;
+        if (v <= 3) return `Lvl ${v}: Tolerance`;
+        if (v <= 4) return `Lvl ${v}: Mild Arousal`;
+        if (v <= 5) return `Lvl ${v}: True Affection`;
         if (v <= 7) return `Lvl ${v}: Deep Affection`;
         if (v <= 9) return `Lvl ${v}: Love`;
         return "Lvl 10: Pure Devotion";
@@ -654,8 +654,8 @@ function applyDiminishing(value, cap, factor = 0.2) {
 
 function applySoftCap(rawChance) {
   if (rawChance <= 10.0) return rawChance;
-  // Soft-cap tuned to 0.65 for a 20-22% ceiling on max stacks
-  return 10.0 + Math.pow(rawChance - 10.0, 0.65);
+  // Adjusted soft-cap exponent from 0.65 to 0.78 for higher max risk (~32% top cap)
+  return 10.0 + Math.pow(rawChance - 10.0, 0.78);
 }
 
 function values() {
@@ -694,9 +694,8 @@ function values() {
   // Male Race & Synergies
   let maleRaceScore = 0.0;
   if (maleRace === "Black") {
-    maleRaceScore = 1.00; // Moderate modifier
+    maleRaceScore = 1.00;
   } else if (maleRace === "White") {
-    // Slight decrease with White female, slight increase with Asian/Black female
     if (femaleRace === "Human") {
       if (humanSubRace === "White") maleRaceScore = -0.40;
       else if (humanSubRace === "Asian" || humanSubRace === "Black") maleRaceScore = 0.40;
@@ -704,19 +703,18 @@ function values() {
   } else if (maleRace === "Other Humanoid") {
     maleRaceScore = 0.20;
   } else if (maleRace === "Anthro") {
-    maleRaceScore = 0.50; // Slight increase modifier
+    maleRaceScore = 0.50;
   } else if (maleRace === "Orc") {
-    // HIGH modifier ONLY if Female is ELF
     if (femaleRace === "Elf") maleRaceScore = 2.50;
     else maleRaceScore = 0.20;
   } else if (maleRace === "Tauren") {
-    maleRaceScore = 0.80; // Modest modifier
+    maleRaceScore = 0.80;
   } else if (maleRace === "Other") {
-    maleRaceScore = (roll(-5, 5) * 0.10); // Random low (-0.50%) to high (+0.50%)
+    maleRaceScore = (roll(-5, 5) * 0.10);
   }
 
-  // Ovulation
-  const ovuScore = (ovulating === "yes") ? 4.00 : -2.00;
+  // Ovulation (Buffed to +8.00%)
+  const ovuScore = (ovulating === "yes") ? 8.00 : -2.00;
 
   // Orgasms (Diminishing returns start after 3)
   const effOrg = applyDiminishing(rawOrg, 3, 0.2);
@@ -739,14 +737,14 @@ function values() {
   else if (pos === "Standing") posScore = -1.00;
   else if (pos === "Other") posScore = (roll(-10, 10) * 0.10);
 
-  // Fertility Modifiers
+  // Fertility Modifiers (Adjusted BC and Pull Out)
   let fertScore = 0.0;
   let fertMult = 1.0;
 
   selectedFertility.forEach(mod => {
-    if (mod === "Birth Control") fertMult *= 0.30;
-    if (mod === "Pull Out") fertMult *= 0.60;
-    if (mod === "Aphrodisiac") fertScore += 1.00; // Positively increases chance (+1.00%)
+    if (mod === "Birth Control") fertMult *= 0.40;
+    if (mod === "Pull Out") fertMult *= 0.70;
+    if (mod === "Aphrodisiac") fertScore += 1.00;
     if (mod === "Fertility Inducer") fertScore += 2.00;
     if (mod === "NTR+") fertScore += 0.50;
     if (mod === "Other Negative") fertScore -= (roll(5, 20) * 0.10);
@@ -774,8 +772,8 @@ function values() {
 
   const volScore = (semenVol / 10) * 2.50;
 
-  // Size Mechanics
-  const lengthScore = length * 0.55;
+  // Size Mechanics (Rebalanced Length scaling to +0.25%/inch)
+  const lengthScore = length * 0.25;
   const effGirth = applyDiminishing(girth, 3, 0.1);
   const girthScore = effGirth * 0.15;
 
