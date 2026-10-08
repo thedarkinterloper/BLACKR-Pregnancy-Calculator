@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLACKR Pregnancy Calculator v2.1</title>
+<title>BLACKR Pregnancy Calculator v2.4</title>
 <style>
 :root {
   --bg: #111318;
@@ -333,7 +333,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
 <body>
 <div class="container">
   <div class="card">
-    <h1>BLACKR Pregnancy Calculator v2.1</h1>
+    <h1>BLACKR Pregnancy Calculator v2.4</h1>
     <p class="subtitle">Enter session variables across all three columns to calculate pregnancy risk.</p>
 
     <div class="columns-grid">
@@ -379,7 +379,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
           <span class="hint"></span>
         </div>
 
-        <!-- Orgasm Counter Slider (Diminishing returns after 3) -->
+        <!-- Orgasm Counter Slider -->
         <div class="field">
           <div class="label-row">
             <label for="orgasms">Orgasm Counter</label>
@@ -557,7 +557,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
           <div class="bar"><div id="barFill" class="bar-fill"></div></div>
         </div>
 
-        <!-- Detailed Stat Breakdown (Closed by default) -->
+        <!-- Detailed Stat Breakdown -->
         <details>
           <summary>View Detailed Breakdown</summary>
           <table class="breakdown-table">
@@ -653,9 +653,8 @@ function applyDiminishing(value, cap, factor = 0.2) {
 }
 
 function applySoftCap(rawChance) {
-  if (rawChance <= 10.0) return rawChance;
-  // Adjusted soft-cap exponent from 0.65 to 0.78 for higher max risk (~32% top cap)
-  return 10.0 + Math.pow(rawChance - 10.0, 0.78);
+  if (rawChance <= 20.0) return rawChance;
+  return 20.0 + Math.pow(rawChance - 20.0, 0.72);
 }
 
 function values() {
@@ -684,100 +683,112 @@ function values() {
   if (age <= 36) ageScore = 1.50;
   else if (age <= 42) ageScore = 0.80;
 
-  // Female Race
+  // Female Race & Sub-Race Synergy Adjustments
   let femaleRaceScore = 0.0;
-  if (femaleRace === "Elf" || femaleRace === "Alien") femaleRaceScore = 0.50;
-  else if (femaleRace === "Vampire") femaleRaceScore = -0.80;
+  if (femaleRace === "Elf" || femaleRace === "Alien") femaleRaceScore = 1.00;
+  else if (femaleRace === "Vampire") femaleRaceScore = -1.00;
   else if (femaleRace === "Not Listed") femaleRaceScore = (roll(-5, 5) * 0.10);
-  else if (femaleRace === "Human" && humanSubRace === "Other") femaleRaceScore = (roll(-5, 5) * 0.10);
+  else if (femaleRace === "Human") {
+    if (humanSubRace === "White") {
+      if (maleRace === "Black") femaleRaceScore = 1.50;
+    } else if (humanSubRace === "Asian") {
+      if (maleRace === "White" || maleRace === "Black") femaleRaceScore = 1.50;
+    } else if (humanSubRace === "Black") {
+      if (maleRace === "Tauren" || maleRace === "Orc" || maleRace === "Other") femaleRaceScore = 1.50;
+    } else if (humanSubRace === "Other") {
+      femaleRaceScore = (roll(-5, 5) * 0.10);
+    }
+  }
 
   // Male Race & Synergies
   let maleRaceScore = 0.0;
   if (maleRace === "Black") {
-    maleRaceScore = 1.00;
+    maleRaceScore = 2.00;
   } else if (maleRace === "White") {
-    if (femaleRace === "Human") {
-      if (humanSubRace === "White") maleRaceScore = -0.40;
-      else if (humanSubRace === "Asian" || humanSubRace === "Black") maleRaceScore = 0.40;
-    }
+    if (femaleRace === "Human" && humanSubRace === "White") maleRaceScore = -0.40;
   } else if (maleRace === "Other Humanoid") {
-    maleRaceScore = 0.20;
+    const exoticRaces = ["Elf", "Angel", "Demon", "Vampire", "Alien", "Not Listed"];
+    maleRaceScore = exoticRaces.includes(femaleRace) ? 1.50 : 0.50;
   } else if (maleRace === "Anthro") {
-    maleRaceScore = 0.50;
+    maleRaceScore = 1.00;
   } else if (maleRace === "Orc") {
-    if (femaleRace === "Elf") maleRaceScore = 2.50;
-    else maleRaceScore = 0.20;
+    if (femaleRace === "Elf") maleRaceScore = 3.50;
+    else maleRaceScore = 0.50;
   } else if (maleRace === "Tauren") {
-    maleRaceScore = 0.80;
+    maleRaceScore = 1.50;
   } else if (maleRace === "Other") {
     maleRaceScore = (roll(-5, 5) * 0.10);
   }
 
-  // Ovulation (Buffed to +8.00%)
-  const ovuScore = (ovulating === "yes") ? 8.00 : -2.00;
+  // Ovulation
+  const ovuScore = (ovulating === "yes") ? 10.00 : -2.00;
 
-  // Orgasms (Diminishing returns start after 3)
+  // Orgasms & Arousal
   const effOrg = applyDiminishing(rawOrg, 3, 0.2);
-  const orgScore = effOrg * 0.25;
+  const orgScore = effOrg * 0.40;
 
-  // Arousal (Diminishing returns start after 5)
   const effArousal = applyDiminishing(arousal, 5, 0.2);
-  const arousalScore = effArousal * 0.25;
+  const arousalScore = effArousal * 0.40;
 
-  // Affection (U-Shaped curve)
-  const distFromCenter = Math.abs(aff - 5.0);
-  const affScore = distFromCenter * 0.30;
+  // Affection Progression
+  const affScore = -1.00 + (aff * 0.30);
 
   // Position
   let posScore = 0.0;
-  if (pos === "Missionary") posScore = 1.50;
+  if (pos === "Missionary") posScore = 2.00;
   else if (pos === "FemaleOnTop") posScore = -0.60;
-  else if (pos === "ProneBone") posScore = 1.10;
-  else if (pos === "DoggyStyle") posScore = 0.70;
+  else if (pos === "ProneBone") posScore = 1.50;
+  else if (pos === "DoggyStyle") posScore = 1.00;
   else if (pos === "Standing") posScore = -1.00;
   else if (pos === "Other") posScore = (roll(-10, 10) * 0.10);
 
-  // Fertility Modifiers (Adjusted BC and Pull Out)
+  // Fertility Modifiers (Softer contraceptive multipliers to maintain ~5% risk floor)
   let fertScore = 0.0;
   let fertMult = 1.0;
 
   selectedFertility.forEach(mod => {
-    if (mod === "Birth Control") fertMult *= 0.40;
-    if (mod === "Pull Out") fertMult *= 0.70;
-    if (mod === "Aphrodisiac") fertScore += 1.00;
-    if (mod === "Fertility Inducer") fertScore += 2.00;
-    if (mod === "NTR+") fertScore += 0.50;
+    if (mod === "Birth Control") fertMult *= 0.65;
+    if (mod === "Pull Out") fertMult *= 0.75;
+    if (mod === "Aphrodisiac") fertScore += 2.00;
+    if (mod === "Fertility Inducer") fertScore += 4.00;
+    if (mod === "NTR+") fertScore += 1.00;
     if (mod === "Other Negative") fertScore -= (roll(5, 20) * 0.10);
     if (mod === "Other Positive") fertScore += (roll(5, 20) * 0.10);
   });
 
   // Observer Effect
   let obsScore = 0.0;
-  if (obs === "1") obsScore = 0.40;
-  if (obs === "1plus") obsScore = 1.00;
+  if (obs === "1") obsScore = 0.50;
+  if (obs === "1plus") obsScore = 1.50;
 
   // Ejaculation Episodes
   let episodeScore = 0.0;
   if (episodes === 0) {
     episodeScore = -99.0;
   } else {
-    episodeScore = 1.00 + (episodes - 1) * 0.10;
+    episodeScore = 1.00 + (episodes - 1) * 0.20;
   }
 
   // Sperm Concentration & Volume
   let concScore = 1.00;
   if (spermConc === "Dilute") concScore = 0.30;
-  if (spermConc === "Thick") concScore = 1.80;
-  if (spermConc === "Hyper") concScore = 2.50;
+  if (spermConc === "Thick") concScore = 2.00;
+  if (spermConc === "Hyper") concScore = 3.00;
 
-  const volScore = (semenVol / 10) * 2.50;
+  let volScore = 0.0;
+  if (semenVol <= 2) {
+    volScore = roll(1, 24) * 0.01;
+  } else {
+    volScore = (semenVol / 10) * 3.00;
+  }
 
-  // Size Mechanics (Rebalanced Length scaling to +0.25%/inch)
-  const lengthScore = length * 0.25;
+  // Size Mechanics
+  const lengthScore = length * 0.30;
   const effGirth = applyDiminishing(girth, 3, 0.1);
-  const girthScore = effGirth * 0.15;
+  const girthScore = effGirth * 0.20;
 
-  const baseScore = 0.20;
+  // Boosted Engine Baseline (Shifted from 0.20% to 10.00%)
+  const baseScore = 10.00;
 
   const rawBase = baseScore + ageScore + maleRaceScore + femaleRaceScore +
                   ovuScore + orgScore + arousalScore + affScore + posScore + fertScore +
@@ -796,7 +807,7 @@ function values() {
     { label: "Penis Type / Male Race (" + maleRace + ")", val: (maleRaceScore >= 0 ? "+" : "") + maleRaceScore.toFixed(2) + "%" },
     { label: "Ovulation Status (" + ovulating + ")", val: (ovuScore >= 0 ? "+" : "") + ovuScore.toFixed(2) + "%" },
     { label: "Orgasm & Arousal", val: "+" + (orgScore + arousalScore).toFixed(2) + "%" },
-    { label: "Affection Level (" + aff + ")", val: "+" + affScore.toFixed(2) + "%" },
+    { label: "Affection Level (" + aff + ")", val: (affScore >= 0 ? "+" : "") + affScore.toFixed(2) + "%" },
     { label: "Position Modifier", val: (posScore >= 0 ? "+" : "") + posScore.toFixed(2) + "%" },
     { label: "Ejaculation Episodes (" + episodes + ")", val: (episodeScore >= 0 ? "+" : "") + episodeScore.toFixed(2) + "%" },
     { label: "Sperm Conc. & Volume", val: "+" + (concScore + volScore).toFixed(2) + "%" },
@@ -807,7 +818,7 @@ function values() {
     { label: "Subtotal (Pre Soft-Cap)", val: afterProtection.toFixed(2) + "%" }
   ];
 
-  if (afterProtection > 10.0) {
+  if (afterProtection > 20.0) {
     breakdown.push({ label: "Soft-Cap Reduction", val: "-" + (afterProtection - finalChance).toFixed(2) + "%" });
   }
 
