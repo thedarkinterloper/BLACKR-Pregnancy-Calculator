@@ -3,7 +3,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLACKR Pregnancy Calculator v2.6</title>
+<title>BLACKR Pregnancy Calculator v2.9</title>
 <style>
 :root {
   --bg: #111318;
@@ -59,15 +59,11 @@ h1 { text-align: center; margin: 0 0 4px; font-size: 26px; }
 }
 
 @media (max-width: 1200px) {
-  .columns-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  .columns-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
-  .columns-grid {
-    grid-template-columns: 1fr;
-  }
+  .columns-grid { grid-template-columns: 1fr; }
 }
 
 .column {
@@ -333,8 +329,8 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
 <body>
 <div class="container">
   <div class="card">
-    <h1>BLACKR Pregnancy Calculator v2.5</h1>
-    <p class="subtitle">Enter session variables across all three columns and click "SINGLE ROLL" to calculate pregnancy risk.</p>
+    <h1>BLACKR Pregnancy Calculator v2.9</h1>
+    <p class="subtitle">Stratified Size Engine: Multi-tier scaling with a max cap strictly configured around 55%.</p>
 
     <div class="columns-grid">
       
@@ -342,17 +338,14 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
       <div class="column">
         <div class="column-header">♀️ Female Characteristics</div>
 
-        <!-- Female Age Slider -->
         <div class="field">
           <div class="label-row">
             <label for="femaleAge">Female Age</label>
             <span id="femaleAgeBadge" class="val-badge">18</span>
           </div>
           <input id="femaleAge" type="range" min="18" max="45" step="1" value="18">
-          <span class="hint"></span>
         </div>
 
-        <!-- Female Race -->
         <div class="field">
           <label for="femaleRace">Female Race</label>
           <select id="femaleRace">
@@ -364,10 +357,8 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
             <option value="Vampire">Vampire</option>
             <option value="Alien">Alien</option>
           </select>
-          <span class="hint"></span>
         </div>
 
-        <!-- Dynamic Human Sub-Race -->
         <div class="field" id="humanSubRaceField" style="display:none;">
           <label for="humanSubRace">Human Sub-Race</label>
           <select id="humanSubRace">
@@ -376,37 +367,30 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
             <option value="Black">Black</option>
             <option value="Other">Other</option>
           </select>
-          <span class="hint"></span>
         </div>
 
-        <!-- Orgasm Counter Slider -->
         <div class="field">
           <div class="label-row">
             <label for="orgasms">Orgasm Counter</label>
             <span id="orgasmsBadge" class="val-badge">0</span>
           </div>
           <input id="orgasms" type="range" min="0" max="10" step="1" value="0">
-          <span class="hint"></span>
         </div>
 
-        <!-- Arousal Level Slider -->
         <div class="field">
           <div class="label-row">
             <label for="arousal">Arousal Level</label>
             <span id="arousalBadge" class="val-badge">Lvl 0: Unaroused</span>
           </div>
           <input id="arousal" type="range" min="0" max="10" step="1" value="0">
-          <span class="hint"></span>
         </div>
 
-        <!-- Affection Slider -->
         <div class="field">
           <div class="label-row">
             <label for="affection">Affection</label>
             <span id="affectionBadge" class="val-badge">Lvl 0: Pure Hatred</span>
           </div>
           <input id="affection" type="range" min="0" max="10" step="1" value="0">
-          <span class="hint"></span>
         </div>
       </div>
 
@@ -414,23 +398,14 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
       <div class="column">
         <div class="column-header">🌀 Quantum Modifiers</div>
 
-        <!-- Ovulating Radio Group -->
         <div class="field">
           <label>Ovulating</label>
           <div class="radio-group">
-            <label>
-              <input type="radio" name="ovulating" value="yes">
-              <span>Yes</span>
-            </label>
-            <label>
-              <input type="radio" name="ovulating" value="no" checked="checked">
-              <span>No</span>
-            </label>
+            <label><input type="radio" name="ovulating" value="yes"><span>Yes</span></label>
+            <label><input type="radio" name="ovulating" value="no" checked="checked"><span>No</span></label>
           </div>
-          <span class="hint"></span>
         </div>
 
-        <!-- Position -->
         <div class="field">
           <label for="position">Position of First Ejaculation</label>
           <select id="position">
@@ -441,10 +416,8 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
             <option value="Standing">Standing</option>
             <option value="Other">Other</option>
           </select>
-          <span class="hint"></span>
         </div>
 
-        <!-- Fertility Modifier Checklist -->
         <div class="field">
           <label>Fertility Modifiers (Multiple Applicable)</label>
           <div class="checklist-group">
@@ -456,10 +429,8 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
             <label class="checklist-item"><input type="checkbox" value="Other Negative"> Other Negative Effect</label>
             <label class="checklist-item"><input type="checkbox" value="Other Positive"> Other Positive Effect</label>
           </div>
-          <span class="hint"></span>
         </div>
 
-        <!-- Observer Effect -->
         <div class="field">
           <label for="observer">Observer Effect</label>
           <select id="observer">
@@ -467,7 +438,6 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
             <option value="1">1 Observer</option>
             <option value="1plus">1+ Observers</option>
           </select>
-          <span class="hint"></span>
         </div>
       </div>
 
@@ -475,7 +445,6 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
       <div class="column">
         <div class="column-header">♂ Male Characteristics</div>
 
-        <!-- Length & Diameter Side-by-Side -->
         <div class="field">
           <div class="side-by-side">
             <div>
@@ -487,10 +456,9 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
               <input id="girth" type="number" min="1" max="5" step="0.1" value="2">
             </div>
           </div>
-          <span class="hint">[Select based on penile dimensions during arousal; max effect cap at 13"]</span>
+          <span class="hint">[Stratified scaling: distinct progression tiers from micro to extreme max 55%]</span>
         </div>
 
-        <!-- Penis Type / Male Race -->
         <div class="field">
           <label for="maleRace">Penis Type / Male Race</label>
           <select id="maleRace">
@@ -502,20 +470,16 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
             <option value="Tauren">Tauren</option>
             <option value="Other">Other</option>
           </select>
-          <span class="hint"></span>
         </div>
 
-        <!-- Ejaculation Episodes Slider -->
         <div class="field">
           <div class="label-row">
             <label for="episodes">Ejaculation Episodes</label>
             <span id="episodesBadge" class="val-badge">0</span>
           </div>
           <input id="episodes" type="range" min="0" max="10" step="1" value="0">
-          <span class="hint"></span>
         </div>
 
-        <!-- Sperm Concentration Dropdown -->
         <div class="field">
           <label for="spermConcentration">Sperm Concentration</label>
           <select id="spermConcentration">
@@ -524,17 +488,14 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
             <option value="Thick">Thick / Concentrated (Heavy, creamy)</option>
             <option value="Hyper">Hyper-Dense / Gel-like (Maximum)</option>
           </select>
-          <span class="hint"></span>
         </div>
 
-        <!-- Semen Volume Slider -->
         <div class="field">
           <div class="label-row">
             <label for="semenVolume">Semen Volume</label>
             <span id="semenVolumeBadge" class="val-badge">Lvl 3: Standard Load</span>
           </div>
           <input id="semenVolume" type="range" min="1" max="10" step="1" value="3">
-          <span class="hint"></span>
         </div>
       </div>
 
@@ -542,13 +503,11 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
       <div class="column action-column">
         <div class="column-header">🎲 Encounter Roll</div>
 
-        <!-- Action Buttons -->
         <div class="btn-group">
           <button id="calculate" type="button">SINGLE ROLL</button>
           <button id="batchRoll" type="button" class="secondary">ROLL 100 TIMES</button>
         </div>
 
-        <!-- Results Display Card -->
         <div id="result" class="result not-pregnant" aria-live="polite">
           <div id="resultWord" class="result-word">🟩 READY</div>
           <div id="score">Click Single Roll or Roll 100 Times.</div>
@@ -557,7 +516,6 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
           <div class="bar"><div id="barFill" class="bar-fill"></div></div>
         </div>
 
-        <!-- Detailed Stat Breakdown -->
         <details>
           <summary>View Detailed Breakdown</summary>
           <table class="breakdown-table">
@@ -570,7 +528,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
 
     </div>
 
-    <div class="footer">⚠️ Fictional RP mechanic for artistic purposes. This does NOT model real-world fertility or pregnancy risk. I am aware there are copy-cats of this by low IQ thieves who ripped this code and lack aesthetic sense.</div>
+    <div class="footer">⚠️ Fictional RP mechanic for artistic purposes. Version 2.9 Stratified Size Engine.</div>
   </div>
 </div>
 
@@ -585,7 +543,6 @@ function setupUI() {
   femaleRace.addEventListener("change", updateRaceUI);
   updateRaceUI();
 
-  // Dynamic Slider Badges
   const sliders = [
     { id: "femaleAge", badge: "femaleAgeBadge", format: v => v >= 45 ? "45+" : v },
     { id: "orgasms", badge: "orgasmsBadge", format: v => v >= 10 ? ">10" : v },
@@ -643,9 +600,7 @@ function roll(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function sleep(ms) {
-  return new Promise(r => setTimeout(r, ms));
-}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 function applyDiminishing(value, cap, factor = 0.2) {
   if (value <= cap) return value;
@@ -653,8 +608,9 @@ function applyDiminishing(value, cap, factor = 0.2) {
 }
 
 function applySoftCap(rawChance) {
-  if (rawChance <= 20.0) return rawChance;
-  return 20.0 + Math.pow(rawChance - 20.0, 0.72);
+  if (rawChance <= 22.5) return rawChance;
+  const excess = rawChance - 22.5;
+  return 22.5 + (Math.pow(excess, 0.52) * 2.85);
 }
 
 function values() {
@@ -678,62 +634,37 @@ function values() {
 
   const selectedFertility = Array.from(document.querySelectorAll('.checklist-group input:checked')).map(cb => cb.value);
 
-  // Age Score
   let ageScore = 0.20;
   if (age <= 36) ageScore = 1.50;
   else if (age <= 42) ageScore = 0.80;
 
-  // Female Race & Sub-Race Synergy Adjustments
   let femaleRaceScore = 0.0;
   if (femaleRace === "Elf" || femaleRace === "Alien") femaleRaceScore = 1.00;
   else if (femaleRace === "Vampire") femaleRaceScore = -1.00;
   else if (femaleRace === "Not Listed") femaleRaceScore = (roll(-5, 5) * 0.10);
   else if (femaleRace === "Human") {
-    if (humanSubRace === "White") {
-      if (maleRace === "Black") femaleRaceScore = 1.50;
-    } else if (humanSubRace === "Asian") {
-      if (maleRace === "White" || maleRace === "Black") femaleRaceScore = 1.50;
-    } else if (humanSubRace === "Black") {
-      if (maleRace === "Tauren" || maleRace === "Orc" || maleRace === "Other") femaleRaceScore = 1.50;
-    } else if (humanSubRace === "Other") {
-      femaleRaceScore = (roll(-5, 5) * 0.10);
-    }
+    if (humanSubRace === "White" && maleRace === "Black") femaleRaceScore = 1.50;
+    else if (humanSubRace === "Asian" && (maleRace === "White" || maleRace === "Black")) femaleRaceScore = 1.50;
+    else if (humanSubRace === "Black" && (maleRace === "Tauren" || maleRace === "Orc" || maleRace === "Other")) femaleRaceScore = 1.50;
+    else if (humanSubRace === "Other") femaleRaceScore = (roll(-5, 5) * 0.10);
   }
 
-  // Male Race & Synergies
   let maleRaceScore = 0.0;
-  if (maleRace === "Black") {
-    maleRaceScore = 2.00;
-  } else if (maleRace === "White") {
-    if (femaleRace === "Human" && humanSubRace === "White") maleRaceScore = -0.40;
-  } else if (maleRace === "Other Humanoid") {
+  if (maleRace === "Black") maleRaceScore = 2.00;
+  else if (maleRace === "White" && femaleRace === "Human" && humanSubRace === "White") maleRaceScore = -0.40;
+  else if (maleRace === "Other Humanoid") {
     const exoticRaces = ["Elf", "Angel", "Demon", "Vampire", "Alien", "Not Listed"];
     maleRaceScore = exoticRaces.includes(femaleRace) ? 1.50 : 0.50;
-  } else if (maleRace === "Anthro") {
-    maleRaceScore = 1.00;
-  } else if (maleRace === "Orc") {
-    if (femaleRace === "Elf") maleRaceScore = 3.50;
-    else maleRaceScore = 0.50;
-  } else if (maleRace === "Tauren") {
-    maleRaceScore = 1.50;
-  } else if (maleRace === "Other") {
-    maleRaceScore = (roll(-5, 5) * 0.10);
-  }
+  } else if (maleRace === "Anthro") maleRaceScore = 1.00;
+  else if (maleRace === "Orc") maleRaceScore = (femaleRace === "Elf") ? 3.50 : 0.50;
+  else if (maleRace === "Tauren") maleRaceScore = 1.50;
+  else if (maleRace === "Other") maleRaceScore = (roll(-5, 5) * 0.10);
 
-  // Ovulation
   const ovuScore = (ovulating === "yes") ? 10.00 : -2.00;
-
-  // Orgasms & Arousal
-  const effOrg = applyDiminishing(rawOrg, 3, 0.2);
-  const orgScore = effOrg * 0.40;
-
-  const effArousal = applyDiminishing(arousal, 5, 0.2);
-  const arousalScore = effArousal * 0.40;
-
-  // Affection Progression
+  const orgScore = applyDiminishing(rawOrg, 3, 0.2) * 0.40;
+  const arousalScore = applyDiminishing(arousal, 5, 0.2) * 0.40;
   const affScore = -1.00 + (aff * 0.30);
 
-  // Position
   let posScore = 0.0;
   if (pos === "Missionary") posScore = 2.00;
   else if (pos === "FemaleOnTop") posScore = -0.60;
@@ -742,10 +673,8 @@ function values() {
   else if (pos === "Standing") posScore = -1.00;
   else if (pos === "Other") posScore = (roll(-10, 10) * 0.10);
 
-  // Fertility Modifiers (Softer contraceptive multipliers to maintain ~5% risk floor)
   let fertScore = 0.0;
   let fertMult = 1.0;
-
   selectedFertility.forEach(mod => {
     if (mod === "Birth Control") fertMult *= 0.65;
     if (mod === "Pull Out") fertMult *= 0.75;
@@ -756,73 +685,54 @@ function values() {
     if (mod === "Other Positive") fertScore += (roll(5, 20) * 0.10);
   });
 
-  // Observer Effect
   let obsScore = 0.0;
   if (obs === "1") obsScore = 0.50;
   if (obs === "1plus") obsScore = 1.50;
 
-  // Ejaculation Episodes
-  let episodeScore = 0.0;
-  if (episodes === 0) {
-    episodeScore = -99.0;
-  } else {
-    episodeScore = 1.00 + (episodes - 1) * 0.20;
-  }
+  let episodeScore = (episodes === 0) ? -99.0 : (1.00 + (episodes - 1) * 0.20);
 
-  // Sperm Concentration & Volume
   let concScore = 1.00;
   if (spermConc === "Dilute") concScore = 0.30;
   if (spermConc === "Thick") concScore = 2.00;
   if (spermConc === "Hyper") concScore = 3.00;
 
-  let volScore = 0.0;
-  if (semenVol <= 2) {
-    volScore = roll(1, 24) * 0.01;
-  } else {
-    volScore = (semenVol / 10) * 3.00;
-  }
+  let volScore = (semenVol <= 2) ? (roll(1, 24) * 0.01) : ((semenVol / 10) * 3.00);
 
-  // Size Mechanics
-  const lengthScore = length * 0.30;
-  const effGirth = applyDiminishing(girth, 3, 0.1);
-  const girthScore = effGirth * 0.20;
+  // --- STRATIFIED SIZE ENGINE (v2.9 Tuned) ---
+  const lengthFactor = Math.pow(length / 6.0, 1.6);
+  const girthFactor = Math.pow(girth / 2.0, 1.4);
+  let sizeMultiplier = lengthFactor * girthFactor;
+  sizeMultiplier = Math.max(0.05, Math.min(sizeMultiplier, 5.00));
 
-  // Boosted Engine Baseline (Shifted to 25.00%)
-  const baseScore = 25.00;
+  const baseScore = 4.00;
 
   const rawBase = baseScore + ageScore + maleRaceScore + femaleRaceScore +
                   ovuScore + orgScore + arousalScore + affScore + posScore + fertScore +
-                  obsScore + episodeScore + concScore + volScore + lengthScore + girthScore;
+                  obsScore + episodeScore + concScore + volScore;
 
-  let afterProtection = Math.max(0, rawBase * fertMult);
+  let afterProtection = Math.max(0, (rawBase * sizeMultiplier) * fertMult);
   if (episodes === 0) afterProtection = 0;
 
   let finalChance = applySoftCap(afterProtection);
-  finalChance = Math.min(Math.max(finalChance, 0.0), 95.0);
+  finalChance = Math.min(Math.max(finalChance, 0.0), 55.0); // Hard ceiling at 55%
 
   const breakdown = [
     { label: "Engine Baseline", val: "+" + baseScore.toFixed(2) + "%" },
     { label: "Female Age (" + age + ")", val: "+" + ageScore.toFixed(2) + "%" },
-    { label: "Female Race (" + femaleRace + (femaleRace === "Human" ? " - " + humanSubRace : "") + ")", val: (femaleRaceScore >= 0 ? "+" : "") + femaleRaceScore.toFixed(2) + "%" },
-    { label: "Penis Type / Male Race (" + maleRace + ")", val: (maleRaceScore >= 0 ? "+" : "") + maleRaceScore.toFixed(2) + "%" },
+    { label: "Female Race", val: (femaleRaceScore >= 0 ? "+" : "") + femaleRaceScore.toFixed(2) + "%" },
+    { label: "Male Race (" + maleRace + ")", val: (maleRaceScore >= 0 ? "+" : "") + maleRaceScore.toFixed(2) + "%" },
     { label: "Ovulation Status (" + ovulating + ")", val: (ovuScore >= 0 ? "+" : "") + ovuScore.toFixed(2) + "%" },
     { label: "Orgasm & Arousal", val: "+" + (orgScore + arousalScore).toFixed(2) + "%" },
-    { label: "Affection Level (" + aff + ")", val: (affScore >= 0 ? "+" : "") + affScore.toFixed(2) + "%" },
+    { label: "Affection Level", val: (affScore >= 0 ? "+" : "") + affScore.toFixed(2) + "%" },
     { label: "Position Modifier", val: (posScore >= 0 ? "+" : "") + posScore.toFixed(2) + "%" },
-    { label: "Ejaculation Episodes (" + episodes + ")", val: (episodeScore >= 0 ? "+" : "") + episodeScore.toFixed(2) + "%" },
+    { label: "Ejaculation Episodes", val: (episodeScore >= 0 ? "+" : "") + episodeScore.toFixed(2) + "%" },
     { label: "Sperm Conc. & Volume", val: "+" + (concScore + volScore).toFixed(2) + "%" },
-    { label: "Length & Diameter", val: "+" + (lengthScore + girthScore).toFixed(2) + "%" },
-    { label: "Observer Effect", val: "+" + obsScore.toFixed(2) + "%" },
-    { label: "Fertility Modifiers", val: (fertScore >= 0 ? "+" : "") + fertScore.toFixed(2) + "%" },
+    { label: "Size Multiplier (" + length + "\"x" + girth + "\")", val: "x" + sizeMultiplier.toFixed(2) },
+    { label: "Observer & Fertility Mods", val: (fertScore >= 0 ? "+" : "") + fertScore.toFixed(2) + "%" },
     { label: "Protection Mult.", val: "x" + fertMult.toFixed(2) },
-    { label: "Subtotal (Pre Soft-Cap)", val: afterProtection.toFixed(2) + "%" }
+    { label: "Subtotal", val: afterProtection.toFixed(2) + "%" },
+    { label: "Final Chance", val: finalChance.toFixed(2) + "%" }
   ];
-
-  if (afterProtection > 20.0) {
-    breakdown.push({ label: "Soft-Cap Reduction", val: "-" + (afterProtection - finalChance).toFixed(2) + "%" });
-  }
-
-  breakdown.push({ label: "Final Chance", val: finalChance.toFixed(2) + "%" });
 
   return { chance: finalChance, breakdown };
 }
@@ -858,7 +768,6 @@ async function calculate() {
   rt.textContent = "";
 
   const target = Math.round(v.chance);
-
   const animationDelays = [25, 30, 35, 40, 45, 50, 60, 70, 85, 100, 120, 150];
   for (let i = 0; i < animationDelays.length; i++) {
     let dramaticVal = (i > 6) ? roll(Math.max(1, target - 10), Math.min(100, target + 10)) : roll(1, 100);
@@ -927,6 +836,4 @@ async function batchSimulate() {
 document.getElementById("calculate").addEventListener("click", calculate);
 document.getElementById("batchRoll").addEventListener("click", batchSimulate);
 </script>
-
-
 </body></html>
