@@ -1,9 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLACKR Pregnancy Calculator v2.5</title>
+<title>BLACKR Pregnancy Calculator v2.6</title>
 <style>
 :root {
   --bg: #111318;
@@ -356,7 +356,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
         <div class="field">
           <label for="femaleRace">Female Race</label>
           <select id="femaleRace">
-            <option value="Not Listed" selected>Not Listed</option>
+            <option value="Not Listed" selected="selected">Not Listed</option>
             <option value="Human">Human</option>
             <option value="Elf">Elf</option>
             <option value="Angel">Angel</option>
@@ -371,7 +371,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
         <div class="field" id="humanSubRaceField" style="display:none;">
           <label for="humanSubRace">Human Sub-Race</label>
           <select id="humanSubRace">
-            <option value="White">White</option>
+            <option value="White" selected="selected">White</option>
             <option value="Asian">Asian</option>
             <option value="Black">Black</option>
             <option value="Other">Other</option>
@@ -403,7 +403,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
         <div class="field">
           <div class="label-row">
             <label for="affection">Affection</label>
-            <span id="affectionBadge" class="val-badge">Lvl 0: Hostile</span>
+            <span id="affectionBadge" class="val-badge">Lvl 0: Pure Hatred</span>
           </div>
           <input id="affection" type="range" min="0" max="10" step="1" value="0">
           <span class="hint"></span>
@@ -423,7 +423,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
               <span>Yes</span>
             </label>
             <label>
-              <input type="radio" name="ovulating" value="no" checked>
+              <input type="radio" name="ovulating" value="no" checked="checked">
               <span>No</span>
             </label>
           </div>
@@ -434,8 +434,8 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
         <div class="field">
           <label for="position">Position of First Ejaculation</label>
           <select id="position">
-            <option value="Missionary">Missionary & Variations</option>
-            <option value="FemaleOnTop">Female on Top & Variations</option>
+            <option value="Missionary" selected="selected">Missionary &amp; Variations</option>
+            <option value="FemaleOnTop">Female on Top &amp; Variations</option>
             <option value="ProneBone">Prone Bone</option>
             <option value="DoggyStyle">Doggy Style</option>
             <option value="Standing">Standing</option>
@@ -463,7 +463,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
         <div class="field">
           <label for="observer">Observer Effect</label>
           <select id="observer">
-            <option value="none">No Observation</option>
+            <option value="none" selected="selected">No Observation</option>
             <option value="1">1 Observer</option>
             <option value="1plus">1+ Observers</option>
           </select>
@@ -494,7 +494,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
         <div class="field">
           <label for="maleRace">Penis Type / Male Race</label>
           <select id="maleRace">
-            <option value="Black">Black</option>
+            <option value="Black" selected="selected">Black</option>
             <option value="White">White</option>
             <option value="Other Humanoid">Other Humanoid</option>
             <option value="Anthro">Anthro</option>
@@ -520,7 +520,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
           <label for="spermConcentration">Sperm Concentration</label>
           <select id="spermConcentration">
             <option value="Dilute">Dilute / Thin (Watery density)</option>
-            <option value="Standard" selected>Standard (Normal consistency)</option>
+            <option value="Standard" selected="selected">Standard (Normal consistency)</option>
             <option value="Thick">Thick / Concentrated (Heavy, creamy)</option>
             <option value="Hyper">Hyper-Dense / Gel-like (Maximum)</option>
           </select>
@@ -570,7 +570,7 @@ summary { cursor: pointer; color: var(--text); font-weight: bold; }
 
     </div>
 
-    <div class="footer">⚠️ Fictional RP mechanic for artistic purposes. This does NOT model real-world fertility or pregnancy risk.</div>
+    <div class="footer">⚠️ Fictional RP mechanic for artistic purposes. This does NOT model real-world fertility or pregnancy risk. I am aware there are copy-cats of this by low IQ thieves who ripped this code and lack aesthetic sense.</div>
   </div>
 </div>
 
@@ -787,8 +787,8 @@ function values() {
   const effGirth = applyDiminishing(girth, 3, 0.1);
   const girthScore = effGirth * 0.20;
 
-  // Boosted Engine Baseline (Shifted from 0.20% to 10.00%)
-  const baseScore = 10.00;
+  // Boosted Engine Baseline (Shifted to 25.00%)
+  const baseScore = 25.00;
 
   const rawBase = baseScore + ageScore + maleRaceScore + femaleRaceScore +
                   ovuScore + orgScore + arousalScore + affScore + posScore + fertScore +
@@ -927,5 +927,6 @@ async function batchSimulate() {
 document.getElementById("calculate").addEventListener("click", calculate);
 document.getElementById("batchRoll").addEventListener("click", batchSimulate);
 </script>
-</body>
-</html>
+
+
+</body></html>
